@@ -50,7 +50,7 @@ def load_trained_model():
         print("="*60)
         
         # Try to load the latest model
-        loaded_model = model.load_model('signature_model_latest', format='keras')
+        loaded_model = model.load_model('signature_model_latest', format='h5')
         
         if loaded_model is None:
             print("⚠️  Warning: No trained model found!")
@@ -83,13 +83,13 @@ def preprocess_signature(image_bytes):
     nparr = np.frombuffer(image_bytes, np.uint8)
     
     # Decode image
-    img = cv2.imdecode(nparr, cv2.IMREAD_GRAYSCALE)
+    img = cv2.imdecode(nparr, 0)
     
     if img is None:
         raise ValueError("Could not decode image")
     
     # Resize to model input size
-    img = cv2.resize(img, config.IMAGE_SIZE)
+    img = cv2.resize(img, config.IMAGE_SIZE)  # type: ignore
     
     # Normalize pixel values (0-255 → 0-1)
     img = img / 255.0
